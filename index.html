@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedZone — Pakistan's Next-Generation Pharmacy Management System</title>
+<meta name="description" content="MedZone — a full-stack pharmacy management system for Pakistan. 18,706 pre-loaded medicines, strip/loose POS, FEFO batching, Udhaar ledger, real-time manager approvals.">
+<meta name="author" content="Muneeb Ahmad Butt &amp; Hamaad Amir">
+<meta name="theme-color" content="#0b3f3a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MedZone — Pakistan's Next-Generation Pharmacy Management System">
+<meta property="og:description" content="MedZone — a full-stack pharmacy management system for Pakistan. 18,706 pre-loaded medicines, strip/loose POS, FEFO batching, Udhaar ledger, real-time manager approvals.">
+<meta property="og:image" content="docs/screenshots/03_ceo_dashboard.png">
+<meta property="og:url" content="https://muneebbutt2003.github.io/medzone-fyp-2026/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MedZone — Pakistan's Next-Generation Pharmacy Management System">
+<meta name="twitter:description" content="MedZone — a full-stack pharmacy management system for Pakistan. 18,706 pre-loaded medicines, strip/loose POS, FEFO batching, Udhaar ledger, real-time manager approvals.">
+<meta name="twitter:image" content="docs/screenshots/03_ceo_dashboard.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230b3f3a'/><path d='M50 22v56M22 50h56' stroke='%235eead4' stroke-width='14' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+<style>
+/* ---------- design tokens ---------- */
+:root{
+  --teal-950:#062b28;
+  --teal-900:#0b3f3a;
+  --teal-800:#0f574f;
+  --teal-700:#0f766e;
+  --teal-600:#11897f;
+  --teal-400:#2dd4bf;
+  --teal-300:#5eead4;
+  --teal-100:#ccfbf1;
+  --teal-50:#f0fdfa;
+
+  --ink:#0f1e1c;
+  --body:#41564f;
+  --muted:#6b807a;
+  --line:#dce8e5;
+  --white:#ffffff;
+  --surface:#f7fbfa;
+
+  --radius:16px;
+  --radius-lg:22px;
+  --shadow-sm:0 1px 2px rgba(6,43,40,.06), 0 2px 8px rgba(6,43,40,.05);
+  --shadow-md:0 8px 26px rgba(6,43,40,.09);
+  --shadow-lg:0 22px 60px rgba(6,43,40,.16);
+  --maxw:1140px;
+  --nav-h:68px;
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--body);
+  background:var(--white);
+  line-height:1.65;
+  font-size:17px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:var(--teal-700);text-decoration:none}
+h1,h2,h3{color:var(--ink);line-height:1.2;margin:0;font-weight:700;letter-spacing:-.02em}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--teal-400);outline-offset:3px;border-radius:6px}
+
+/* ---------- layout ---------- */
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:22px}
+section{padding:92px 0;scroll-margin-top:calc(var(--nav-h) + 8px)}
+.section-head{max-width:720px;margin:0 auto 52px;text-align:center}
+.eyebrow{
+  display:inline-block;font-size:.76rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal-700);margin-bottom:14px;
+}
+h2{font-size:clamp(1.75rem,3.6vw,2.5rem)}
+.section-head p{margin-top:16px;font-size:1.06rem;color:var(--muted)}
+.alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:60;height:var(--nav-h);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.22rem;color:var(--teal-800);letter-spacing:-.03em}
+.logo-mark{
+  width:30px;height:30px;border-radius:9px;flex:none;
+  background:linear-gradient(140deg,var(--teal-700),var(--teal-900));
+  display:grid;place-items:center;color:var(--teal-300);font-size:1rem;font-weight:800;line-height:1;
+}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;margin:0;padding:0}
+.nav-links a{
+  display:block;padding:8px 13px;border-radius:9px;font-size:.93rem;font-weight:500;
+  color:var(--body);transition:background .18s,color .18s;
+}
+.nav-links a:hover{background:var(--teal-50);color:var(--teal-800)}
+.nav-links a.active{color:var(--teal-800);background:var(--teal-50);font-weight:600}
+.nav-links a.gh{background:var(--teal-800);color:#fff;font-weight:600;margin-left:8px;padding:9px 16px}
+.nav-links a.gh:hover{background:var(--teal-900);color:#fff}
+.burger{
+  display:none;width:42px;height:42px;border:1px solid var(--line);background:#fff;
+  border-radius:11px;cursor:pointer;padding:0;place-items:center;
+}
+.burger span{display:block;width:18px;height:2px;background:var(--teal-800);border-radius:2px;position:relative;transition:transform .22s,background .22s}
+.burger span::before,.burger span::after{
+  content:"";position:absolute;left:0;width:18px;height:2px;background:var(--teal-800);
+  border-radius:2px;transition:transform .22s,top .22s;
+}
+.burger span::before{top:-6px}
+.burger span::after{top:6px}
+.burger[aria-expanded="true"] span{background:transparent}
+.burger[aria-expanded="true"] span::before{top:0;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span::after{top:0;transform:rotate(-45deg)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:104px 0 96px;background:var(--white)}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:62px 62px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 65% at 50% 32%,#000,transparent 72%);
+  mask-image:radial-gradient(ellipse 80% 65% at 50% 32%,#000,transparent 72%);
+  opacity:.65;
+}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.42}
+.blob-a{width:480px;height:480px;left:-140px;top:-170px;background:var(--teal-100);animation:drift 22s ease-in-out infinite}
+.blob-b{width:420px;height:420px;right:-120px;top:-60px;background:#e0f7f3;animation:drift 26s ease-in-out infinite reverse}
+.blob-c{width:380px;height:380px;left:44%;bottom:-220px;background:var(--teal-50);animation:drift 30s ease-in-out infinite}
+@keyframes drift{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(26px,-22px,0) scale(1.07)}
+}
+.hero-inner{position:relative;z-index:1;max-width:860px;margin-inline:auto;text-align:center}
+.badge{
+  display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:999px;
+  background:var(--teal-50);border:1px solid var(--teal-100);color:var(--teal-800);
+  font-size:.82rem;font-weight:600;margin-bottom:26px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--teal-400);flex:none;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.hero h1{font-size:clamp(2.1rem,5.4vw,3.6rem);letter-spacing:-.035em;font-weight:800}
+.hero h1 .accent{
+  background:linear-gradient(120deg,var(--teal-700),var(--teal-600) 55%,var(--teal-400));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .sub{margin:24px auto 0;max-width:640px;font-size:clamp(1.02rem,1.9vw,1.2rem);color:var(--muted)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:38px}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;
+  font-weight:600;font-size:1rem;border:1px solid transparent;cursor:pointer;
+  transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;
+}
+.btn-primary{background:var(--teal-800);color:#fff;box-shadow:var(--shadow-md)}
+.btn-primary:hover{background:var(--teal-900);transform:translateY(-2px);box-shadow:var(--shadow-lg);color:#fff}
+.btn-ghost{background:#fff;color:var(--teal-800);border-color:var(--line);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{border-color:var(--teal-400);transform:translateY(-2px);background:var(--teal-50)}
+.btn svg{width:18px;height:18px;flex:none}
+.hero-stats{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:14px 52px;margin-top:56px;
+  padding-top:38px;border-top:1px solid var(--line);
+}
+.stat{text-align:center;min-width:120px}
+.stat b{display:block;font-size:1.6rem;font-weight:800;color:var(--teal-800);letter-spacing:-.03em;line-height:1.2}
+.stat span{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:500}
+
+/* ---------- cards ---------- */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;
+  box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s,border-color .2s;height:100%;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--teal-100)}
+.card h3{font-size:1.02rem;margin-bottom:9px;letter-spacing:-.01em}
+.card p{font-size:.93rem;color:var(--muted);line-height:1.6}
+.pain .icon,.fix .icon{
+  width:40px;height:40px;border-radius:11px;display:grid;place-items:center;
+  font-size:1.15rem;margin-bottom:16px;font-weight:700;
+}
+.pain .icon{background:#fef2f2;color:#b4443c;border:1px solid #fde2e0}
+.fix .icon{background:var(--teal-50);color:var(--teal-700);border:1px solid var(--teal-100)}
+.pain{border-left:3px solid #e9b5b0}
+.fix{border-left:3px solid var(--teal-400)}
+.feature .emoji{font-size:1.65rem;display:block;margin-bottom:14px;line-height:1}
+.feature h3{font-size:1rem}
+
+/* ---------- screenshots ---------- */
+.shot-group{margin-top:46px}
+.shot-group:first-of-type{margin-top:0}
+.group-title{
+  display:flex;align-items:center;gap:14px;margin-bottom:22px;
+  font-size:.82rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-800);
+}
+.group-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.shot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.shot{
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;padding:0;
+  cursor:zoom-in;display:block;width:100%;text-align:left;
+  box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.shot:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--teal-300)}
+.shot img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top center;background:var(--surface)}
+.shot .cap{
+  padding:12px 15px;font-size:.87rem;font-weight:500;color:var(--body);
+  border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.cap .zoom{color:var(--muted);font-size:.78rem;flex:none}
+
+/* ---------- lightbox ---------- */
+.lightbox{
+  position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(6,43,40,.92);padding:24px;align-items:center;justify-content:center;
+}
+.lightbox.open{display:flex;animation:fade .2s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.lightbox figure{margin:0;max-width:1180px;width:100%;max-height:100%;display:flex;flex-direction:column;gap:14px}
+.lightbox img{
+  width:100%;max-height:calc(100vh - 150px);object-fit:contain;border-radius:12px;
+  background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+.lightbox figcaption{color:var(--teal-100);font-size:.92rem;text-align:center}
+.lb-close{
+  position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;
+  font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;
+}
+.lb-close:hover{background:rgba(255,255,255,.2)}
+body.lb-lock{overflow:hidden}
+
+/* ---------- tech pills ---------- */
+.pills{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:860px;margin-inline:auto}
+.pill{
+  padding:11px 22px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-weight:600;font-size:.95rem;color:var(--teal-800);box-shadow:var(--shadow-sm);
+  transition:transform .18s,border-color .18s,background .18s;
+}
+.pill:hover{transform:translateY(-3px);border-color:var(--teal-400);background:var(--teal-50)}
+
+/* ---------- FYP card ---------- */
+.fyp{
+  max-width:780px;margin-inline:auto;border-radius:var(--radius-lg);overflow:hidden;
+  background:linear-gradient(155deg,var(--teal-900),var(--teal-950));
+  box-shadow:var(--shadow-lg);
+}
+.fyp-head{padding:30px 34px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.fyp-head h3{color:#fff;font-size:1.3rem}
+.fyp-head p{color:var(--teal-300);font-size:.9rem;margin-top:6px;font-weight:500}
+.fyp-body{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.09);margin:0}
+.fyp-item{background:var(--teal-900);padding:22px 34px}
+.fyp-item dt{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-400);font-weight:700;margin-bottom:6px}
+.fyp-item dd{margin:0;color:#fff;font-weight:600;font-size:1.02rem;line-height:1.45}
+.fyp-item dd a{color:var(--teal-300)}
+
+/* ---------- footer ---------- */
+.footer{background:var(--teal-950);color:#9dc4bf;padding:52px 0 40px}
+.footer-inner{display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:space-between}
+.footer .logo{color:#fff}
+.footer-note{font-size:.92rem;margin-top:10px;color:#8fb4af}
+.footer-links{display:flex;flex-wrap:wrap;gap:10px}
+.footer-links a{
+  padding:10px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.16);
+  color:#fff;font-size:.9rem;font-weight:500;transition:background .18s,border-color .18s;
+}
+.footer-links a:hover{background:rgba(255,255,255,.1);border-color:var(--teal-400)}
+.footer-base{
+  margin-top:34px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);
+  font-size:.84rem;color:#7ea7a2;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;
+}
+
+/* ---------- reveal on scroll ---------- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .fyp-item{padding:20px 26px}
+}
+@media (max-width:860px){
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .burger{display:grid}
+  .nav-links{
+    position:absolute;top:var(--nav-h);left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:#fff;border-bottom:1px solid var(--line);
+    padding:12px 22px 20px;box-shadow:var(--shadow-md);display:none;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 14px;font-size:1rem}
+  .nav-links a.gh{margin-left:0;margin-top:8px;text-align:center}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  section{padding:66px 0}
+  .hero{padding:72px 0 66px}
+  .grid-4,.grid-3{grid-template-columns:1fr}
+  .shot-grid{grid-template-columns:1fr}
+  .fyp-body{grid-template-columns:1fr}
+  .hero-stats{gap:22px 30px;margin-top:42px}
+  .stat{min-width:calc(50% - 22px)}
+  .btn{flex:1 1 100%;justify-content:center}
+  .footer-inner{flex-direction:column;align-items:flex-start}
+  .lightbox{padding:14px}
+  .lb-close{top:10px;right:10px}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important;
+  }
+  .reveal{opacity:1;transform:none}
+  .blob{animation:none}
+  .card:hover,.shot:hover,.pill:hover,.btn:hover{transform:none}
+}
+
+@media print{
+  .nav,.lightbox,.cta-row{display:none !important}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top" aria-label="MedZone home">
+      <span class="logo-mark" aria-hidden="true">+</span>
+      <span>MedZone</span>
+    </a>
+
+    <button class="burger" id="burger" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+      <span aria-hidden="true"></span>
+    </button>
+
+    <nav aria-label="Main">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
+        <li><a href="#tech">Tech Stack</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a class="gh" href="https://github.com/muneebbutt2003/medzone-fyp-2026" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+  </div>
+
+  <div class="wrap hero-inner">
+    <span class="badge"><span class="dot" aria-hidden="true"></span> Final Year Project · 2025–2026</span>
+
+    <h1 id="hero-title">MedZone — <span class="accent">Pakistan's Next-Generation</span> Pharmacy Management System</h1>
+
+    <p class="sub">A full-stack, multi-role PMS built for real Pakistani pharmacies — from the counter cashier to the CEO.</p>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/muneebbutt2003/medzone-fyp-2026" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        View on GitHub
+      </a>
+      <a class="btn btn-ghost" href="#screenshots">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Live Demo
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><b>18,706</b><span>Medicines</span></div>
+      <div class="stat"><b>6</b><span>User Roles</span></div>
+      <div class="stat"><b>FEFO</b><span>Batch Logic</span></div>
+      <div class="stat"><b>Real-time</b><span>Approvals</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROBLEM ===================== -->
+<section class="alt" id="problem" aria-labelledby="problem-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The Problem</span>
+      <h2 id="problem-title">What's broken in Pakistani pharmacy software today</h2>
+      <p>Most pharmacies still run on spreadsheets, paper notebooks and software that was never designed for how they actually sell.</p>
+    </div>
+
+    <div class="grid-4">
+      <article class="card pain reveal">
+        <div class="icon" aria-hidden="true">✕</div>
+        <h3>No pre-loaded medicine data</h3>
+        <p>Pharmacists type every single medicine manually before the system is even usable.</p>
+      </article>
+      <article class="card pain reveal">
+        <div class="icon" aria-hidden="true">✕</div>
+        <h3>Strip vs loose tracked on paper</h3>
+        <p>Selling by strip or by tablet is recorded by hand, causing constant stock errors.</p>
+      </article>
+      <article class="card pain reveal">
+        <div class="icon" aria-hidden="true">✕</div>
+        <h3>No real profit visibility</h3>
+        <p>Nobody knows the actual cost of goods sold, so margins are guessed rather than measured.</p>
+      </article>
+      <article class="card pain reveal">
+        <div class="icon" aria-hidden="true">✕</div>
+        <h3>Credit sales in paper notebooks</h3>
+        <p>Udhaar lives in paper khata books — unverifiable, unlimited and easily lost.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SOLUTION ===================== -->
+<section id="solution" aria-labelledby="solution-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The Solution</span>
+      <h2 id="solution-title">MedZone fixes all of it</h2>
+      <p>Every pain point above is answered by a first-class feature — not a workaround.</p>
+    </div>
+
+    <div class="grid-4">
+      <article class="card fix reveal">
+        <div class="icon" aria-hidden="true">✓</div>
+        <h3>18,706 medicines on day one</h3>
+        <p>A full Pakistani medicine catalogue ships with the system — search and add, never retype.</p>
+      </article>
+      <article class="card fix reveal">
+        <div class="icon" aria-hidden="true">✓</div>
+        <h3>Native strip &amp; loose units</h3>
+        <p>Stock is modelled in strips and tablets at once, so every sale stays perfectly reconciled.</p>
+      </article>
+      <article class="card fix reveal">
+        <div class="icon" aria-hidden="true">✓</div>
+        <h3>COGS from real batch costs</h3>
+        <p>Profit is computed from the landed cost of the exact batch sold — actual numbers, not estimates.</p>
+      </article>
+      <article class="card fix reveal">
+        <div class="icon" aria-hidden="true">✓</div>
+        <h3>Digital Udhaar ledger</h3>
+        <p>Credit customers get a digital khata with enforced limits, payment history and an audit trail.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="alt" id="features" aria-labelledby="features-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2 id="features-title">Everything a Pakistani pharmacy actually needs</h2>
+      <p>Twelve modules covering the counter, the stockroom, the storefront, the road and the boardroom.</p>
+    </div>
+
+    <div class="grid-3">
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">🏥</span><h3>18,706 Pre-loaded Medicines</h3><p>Full Pakistani medicine catalogue ready on day one.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">💊</span><h3>Strip + Loose Selling</h3><p>Sell by strip or individual tablet, stock always accurate.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">🧾</span><h3>Professional Receipts</h3><p>DRAP-influenced receipts with discount support and print CSS.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">📦</span><h3>Supplier &amp; Purchase Orders</h3><p>Full GRN flow with landed cost tracking.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">📊</span><h3>True Profit Analytics</h3><p>COGS from actual batch costs, not guessed margins.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">🔄</span><h3>FEFO Batch Enforcement</h3><p>Oldest-expiry stock sold first, waste minimised.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">📋</span><h3>Controlled Drug Register</h3><p>DRAP-style CNIC capture and audit log.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">💳</span><h3>Udhaar / Khata Ledger</h3><p>Digital credit ledger with limit enforcement.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">⚡</span><h3>Real-time Manager Approvals</h3><p>Socket.io approval, manager approves remotely.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">🛒</span><h3>Customer Storefront</h3><p>Online ordering with live delivery tracking.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">🏍️</span><h3>Rider Management</h3><p>End-to-end delivery with OTP handover.</p></article>
+      <article class="card feature reveal"><span class="emoji" aria-hidden="true">👔</span><h3>Multi-role Dashboard</h3><p>Admin → CEO → Manager → Cashier hierarchy.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SCREENSHOTS ===================== -->
+<section id="screenshots" aria-labelledby="shots-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Screenshots</span>
+      <h2 id="shots-title">See it in action</h2>
+      <p>Click any screenshot to open it full size.</p>
+    </div>
+
+    <div class="shot-group reveal">
+      <h3 class="group-title">Auth &amp; Dashboard</h3>
+      <div class="shot-grid">
+        <button class="shot" type="button" data-src="docs/screenshots/01_login.png" data-caption="MedZone login screen with role-based authentication">
+          <img src="docs/screenshots/01_login.png" alt="MedZone login screen showing the email and password sign-in form with role-based authentication" loading="lazy" decoding="async">
+          <span class="cap">Login &amp; Authentication <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/02_admin_dashboard.png" data-caption="Admin dashboard with system-wide controls and user management">
+          <img src="docs/screenshots/02_admin_dashboard.png" alt="Admin dashboard displaying system-wide statistics, user management and branch controls" loading="lazy" decoding="async">
+          <span class="cap">Admin Dashboard <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/03_ceo_dashboard.png" data-caption="CEO dashboard with multi-branch revenue and profit overview">
+          <img src="docs/screenshots/03_ceo_dashboard.png" alt="CEO dashboard showing multi-branch revenue charts, profit summary and key performance indicators" loading="lazy" decoding="async">
+          <span class="cap">CEO Dashboard <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/04_ceo_branches.png" data-caption="CEO branch management view comparing pharmacy locations">
+          <img src="docs/screenshots/04_ceo_branches.png" alt="CEO branch management screen listing pharmacy branches with their performance figures side by side" loading="lazy" decoding="async">
+          <span class="cap">Branch Management <span class="zoom">Enlarge</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="shot-group reveal">
+      <h3 class="group-title">Manager Features</h3>
+      <div class="shot-grid">
+        <button class="shot" type="button" data-src="docs/screenshots/05_medicine_list.png" data-caption="Medicine inventory list with batch, expiry and stock levels">
+          <img src="docs/screenshots/05_medicine_list.png" alt="Medicine inventory list showing item names, batch numbers, expiry dates and current stock levels" loading="lazy" decoding="async">
+          <span class="cap">Medicine Inventory <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/06_catalogue_search.png" data-caption="Searching the 18,706-medicine Pakistani catalogue">
+          <img src="docs/screenshots/06_catalogue_search.png" alt="Catalogue search screen querying the pre-loaded catalogue of 18,706 Pakistani medicines" loading="lazy" decoding="async">
+          <span class="cap">Catalogue Search <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/07_catalogue_add.png" data-caption="Adding a medicine from the catalogue into branch inventory">
+          <img src="docs/screenshots/07_catalogue_add.png" alt="Form for adding a catalogue medicine into branch inventory with pricing, batch and unit details" loading="lazy" decoding="async">
+          <span class="cap">Add from Catalogue <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/07_profit_dashboard.png" data-caption="Profit analytics built from real batch-level cost of goods sold">
+          <img src="docs/screenshots/07_profit_dashboard.png" alt="Profit analytics dashboard charting revenue, cost of goods sold and true margin calculated from batch costs" loading="lazy" decoding="async">
+          <span class="cap">Profit Analytics <span class="zoom">Enlarge</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="shot-group reveal">
+      <h3 class="group-title">Customer Storefront</h3>
+      <div class="shot-grid">
+        <button class="shot" type="button" data-src="docs/screenshots/08_storefront.png" data-caption="Customer-facing online pharmacy storefront">
+          <img src="docs/screenshots/08_storefront.png" alt="Customer-facing MedZone storefront home page with featured medicines and product categories" loading="lazy" decoding="async">
+          <span class="cap">Storefront Home <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/09_medicines_browse.png" data-caption="Browsing and filtering medicines as a customer">
+          <img src="docs/screenshots/09_medicines_browse.png" alt="Customer medicine browsing page with search filters, prices and stock availability" loading="lazy" decoding="async">
+          <span class="cap">Browse Medicines <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/10_customer_cart.png" data-caption="Customer shopping cart and checkout summary">
+          <img src="docs/screenshots/10_customer_cart.png" alt="Customer shopping cart showing selected medicines, quantities and the order total before checkout" loading="lazy" decoding="async">
+          <span class="cap">Cart &amp; Checkout <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/11_order_tracking.png" data-caption="Live order tracking with rider location on a map">
+          <img src="docs/screenshots/11_order_tracking.png" alt="Live order tracking page showing the delivery status timeline and rider location on a map" loading="lazy" decoding="async">
+          <span class="cap">Live Order Tracking <span class="zoom">Enlarge</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="shot-group reveal">
+      <h3 class="group-title">Cashier POS</h3>
+      <div class="shot-grid">
+        <button class="shot" type="button" data-src="docs/screenshots/12_pos_grid.png" data-caption="Cashier point-of-sale grid with strip and loose selling">
+          <img src="docs/screenshots/12_pos_grid.png" alt="Cashier point-of-sale screen with a medicine grid, live cart and strip or loose unit selection" loading="lazy" decoding="async">
+          <span class="cap">Point of Sale <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/13_receipt.png" data-caption="Printable DRAP-influenced sales receipt with discounts">
+          <img src="docs/screenshots/13_receipt.png" alt="Printable MedZone sales receipt in DRAP-influenced format listing items, discounts and totals" loading="lazy" decoding="async">
+          <span class="cap">Printed Receipt <span class="zoom">Enlarge</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="shot-group reveal">
+      <h3 class="group-title">Rider</h3>
+      <div class="shot-grid">
+        <button class="shot" type="button" data-src="docs/screenshots/14_rider_dashboard.png" data-caption="Rider dashboard listing assigned deliveries">
+          <img src="docs/screenshots/14_rider_dashboard.png" alt="Rider dashboard listing assigned delivery orders with customer addresses and delivery status" loading="lazy" decoding="async">
+          <span class="cap">Rider Dashboard <span class="zoom">Enlarge</span></span>
+        </button>
+        <button class="shot" type="button" data-src="docs/screenshots/15_rider_delivery.png" data-caption="Rider delivery screen with route map and OTP handover">
+          <img src="docs/screenshots/15_rider_delivery.png" alt="Rider delivery screen showing the route map and OTP confirmation step for handing over an order" loading="lazy" decoding="async">
+          <span class="cap">Delivery &amp; OTP Handover <span class="zoom">Enlarge</span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TECH STACK ===================== -->
+<section class="alt" id="tech" aria-labelledby="tech-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Tech Stack</span>
+      <h2 id="tech-title">Built with</h2>
+      <p>A modern JavaScript stack, with a Python service for the analytics and catalogue workload.</p>
+    </div>
+
+    <div class="pills reveal">
+      <span class="pill">React</span>
+      <span class="pill">Node.js</span>
+      <span class="pill">Express</span>
+      <span class="pill">MongoDB</span>
+      <span class="pill">Socket.io</span>
+      <span class="pill">Python</span>
+      <span class="pill">FastAPI</span>
+      <span class="pill">JWT</span>
+      <span class="pill">Leaflet</span>
+      <span class="pill">Stripe</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FYP INFO ===================== -->
+<section id="about" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">About</span>
+      <h2 id="about-title">Final Year Project</h2>
+      <p>MedZone was designed, built and documented as a two-person Final Year Project.</p>
+    </div>
+
+    <div class="fyp reveal">
+      <div class="fyp-head">
+        <h3>MedZone — Pharmacy Management System</h3>
+        <p>Final Year Project — BS Computer Science</p>
+      </div>
+      <dl class="fyp-body">
+        <div class="fyp-item"><dt>University</dt><dd>IISAT University</dd></div>
+        <div class="fyp-item"><dt>Developers</dt><dd>Muneeb Ahmad Butt &amp; Hamaad Amir</dd></div>
+        <div class="fyp-item"><dt>Year</dt><dd>2025–2026</dd></div>
+        <div class="fyp-item"><dt>Supervisor</dt><dd>[Supervisor Name]</dd></div>
+        <div class="fyp-item"><dt>Project</dt><dd>Final Year Project — BS Computer Science</dd></div>
+        <div class="fyp-item"><dt>Repository</dt><dd><a href="https://github.com/muneebbutt2003/medzone-fyp-2026" target="_blank" rel="noopener">medzone-fyp-2026</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="logo"><span class="logo-mark" aria-hidden="true">+</span><span>MedZone</span></div>
+        <p class="footer-note">MedZone — Final Year Project by Muneeb Ahmad Butt &amp; Hamaad Amir</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/muneebbutt2003/medzone-fyp-2026" target="_blank" rel="noopener">GitHub Repo</a>
+        <a href="https://muneebbutt2003.github.io/" target="_blank" rel="noopener">Muneeb's Portfolio</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 Muneeb Ahmad Butt &amp; Hamaad Amir · IISAT University</span>
+      <span>Built with hand-written HTML &amp; CSS</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close screenshot viewer">&times;</button>
+  <figure>
+    <img id="lbImg" src="" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- mobile menu ---------- */
+  var burger = document.getElementById("burger");
+  var links  = document.getElementById("navLinks");
+
+  burger.addEventListener("click", function () {
+    var open = links.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  links.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") {
+      links.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  /* ---------- smooth scroll with sticky-nav offset ---------- */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute("href");
+    if (id.length < 2) return;
+    var target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    var top = target.getBoundingClientRect().top + window.pageYOffset - 76;
+    window.scrollTo({ top: top, behavior: reduced.matches ? "auto" : "smooth" });
+    history.replaceState(null, "", id);
+  });
+
+  /* ---------- active section highlight ---------- */
+  var navAnchors = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
+  var sections = navAnchors
+    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+    .filter(Boolean);
+
+  function setActive(id) {
+    navAnchors.forEach(function (a) {
+      a.classList.toggle("active", a.getAttribute("href") === "#" + id);
+    });
+  }
+
+  if ("IntersectionObserver" in window && sections.length) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) setActive(en.target.id);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    sections.forEach(function (s) { spy.observe(s); });
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  var revealables = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && !reduced.matches) {
+    var ro = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (en, i) {
+        if (!en.isIntersecting) return;
+        en.target.style.transitionDelay = Math.min(i * 55, 220) + "ms";
+        en.target.classList.add("in");
+        obs.unobserve(en.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    Array.prototype.forEach.call(revealables, function (el) { ro.observe(el); });
+  } else {
+    Array.prototype.forEach.call(revealables, function (el) { el.classList.add("in"); });
+  }
+
+  /* ---------- lightbox ---------- */
+  var lb      = document.getElementById("lightbox");
+  var lbImg   = document.getElementById("lbImg");
+  var lbCap   = document.getElementById("lbCap");
+  var lbClose = document.getElementById("lbClose");
+  var lastFocus = null;
+
+  function openLightbox(btn) {
+    var img = btn.querySelector("img");
+    lastFocus = btn;
+    lbImg.src = btn.getAttribute("data-src") || img.src;
+    lbImg.alt = img.alt;
+    lbCap.textContent = btn.getAttribute("data-caption") || img.alt;
+    lb.classList.add("open");
+    document.body.classList.add("lb-lock");
+    lbClose.focus();
+  }
+
+  function closeLightbox() {
+    lb.classList.remove("open");
+    document.body.classList.remove("lb-lock");
+    lbImg.removeAttribute("src");
+    if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".shot"), function (btn) {
+    btn.addEventListener("click", function () { openLightbox(btn); });
+  });
+
+  lb.addEventListener("click", function (e) {
+    if (e.target === lb || e.target.tagName === "FIGURE") closeLightbox();
+  });
+  lbClose.addEventListener("click", closeLightbox);
+
+  document.addEventListener("keydown", function (e) {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "Tab") { e.preventDefault(); lbClose.focus(); }
+  });
+})();
+</script>
+
+</body>
+</html>
